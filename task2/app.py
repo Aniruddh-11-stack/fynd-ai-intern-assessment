@@ -32,7 +32,8 @@ app.add_middleware(
 )
 
 # Database Setup
-DB_NAME = "reviews.db"
+# On Vercel, only /tmp is writable.
+DB_NAME = "/tmp/reviews.db" if os.environ.get("VERCEL") else "reviews.db"
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
