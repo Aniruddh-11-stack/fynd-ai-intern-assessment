@@ -1,7 +1,7 @@
 # Fynd AI Intern Assessment - Final Report
 
 ## 1. Overall Approach
-The solution leverages **Google Gemini Pro** for both NLP tasks (rating classification) and the web application's intelligent features.
+The solution leverages **Google Gemini 2.0 Flash** for both NLP tasks (rating classification) and the web application's intelligent features.
 - **Task 1** focuses on prompt engineering evaluation, comparing different strategies to extract structured data from unstructured text.
 - **Task 2** implements a clean, service-oriented architecture using **FastAPI** for the backend and raw **HTML/Tailwind** for a lightweight, dependency-free frontend that meets the "production-style" requirement without heavy JS frameworks (though Next.js was considered, FastAPI proved faster for a single-language stack given the timeframe).
 

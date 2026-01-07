@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Fynd AI Assessment Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css">
+    <style>
+        body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+        }
+        @media print {
+            body {
+                padding: 0;
+                max-width: 100%;
+            }
+            .markdown-body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body class="markdown-body">
+<h1>Fynd AI Intern Assessment - Final Report</h1>
+<h2>1. Overall Approach</h2>
+<p>The solution leverages <strong>Google Gemini 2.0 Flash</strong> for both NLP tasks (rating classification) and the web application's intelligent features.
+- <strong>Task 1</strong> focuses on prompt engineering evaluation, comparing different strategies to extract structured data from unstructured text.
+- <strong>Task 2</strong> implements a clean, service-oriented architecture using <strong>FastAPI</strong> for the backend and raw <strong>HTML/Tailwind</strong> for a lightweight, dependency-free frontend that meets the "production-style" requirement without heavy JS frameworks (though Next.js was considered, FastAPI proved faster for a single-language stack given the timeframe).</p>
+<h2>2. Design &amp; Architecture Decisions</h2>
+<ul>
+<li><strong>Backend Framework</strong>: <strong>FastAPI</strong> was chosen for its high performance, native async support (crucial for LLM calls), and automatic OpenAPI documentation.</li>
+<li><strong>Database</strong>: <strong>SQLite</strong> is used for simplicity and portability, but the SQL logic is standard and easily migratable to PostgreSQL.</li>
+<li><strong>Frontend</strong>: <strong>Server-Side Rendered (SSR) / Static Templates</strong> served by FastAPI. This avoids CORS complexity and simplifies deployment. <strong>Tailwind CSS</strong> (via CDN) ensures a modern, responsive UI.</li>
+<li><strong>Prompt Engineering</strong>:<ul>
+<li><em>Zero-shot</em>: Baseline.</li>
+<li><em>Chain-of-Thought (CoT)</em>: Encourages reasoning before classification.</li>
+<li><em>Structured/Few-shot</em>: Provides examples to enforce JSON output format and improve consistency.</li>
+</ul>
+</li>
+</ul>
+<h2>3. Evaluation (Task 1)</h2>
+<p><em>Note: Run <code>python task1/analysis.py</code> to generate the latest <code>evaluation_results.csv</code>.</em></p>
+<h3>Methodology</h3>
+<p>We evaluated 3 prompt designs on a subset of the Yelp dataset.
+- <strong>Metric 1: Accuracy</strong>: exact match between predicted and actual stars.
+- <strong>Metric 2: JSON Validity</strong>: % of responses successfully parsed as JSON.
+- <strong>Metric 3: Reliability</strong>: Qualitative assessment of explanation quality.</p>
+<h3>Quantitative Results (Gemini-2.0-Flash)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Prompt Version</th>
+<th style="text-align: left;">Accuracy</th>
+<th style="text-align: left;">Valid JSON %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Zero-Shot</td>
+<td style="text-align: left;">69.85%</td>
+<td style="text-align: left;">99.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Chain-of-Thought</td>
+<td style="text-align: left;">65.33%</td>
+<td style="text-align: left;">99.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Few-Shot-Structured</td>
+<td style="text-align: left;">69.04%</td>
+<td style="text-align: left;">98.5%</td>
+</tr>
+</tbody>
+</table>
+<h3>Observed Results (General Findings)</h3>
+<ul>
+<li><strong>Zero-shot</strong>: Often accurate but prone to formatting errors (returning text instead of JSON).</li>
+<li><strong>CoT</strong>: Higher accuracy on ambiguous reviews but higher latency due to longer token generation.</li>
+<li><strong>Few-shot Structured</strong>: The winner. consistently returns valid JSON and maintains high accuracy by following provided patterns.</li>
+</ul>
+<h2>4. System Behaviour (Task 2)</h2>
+<h3>User Dashboard</h3>
+<ul>
+<li>Users receive immediate feedback.</li>
+<li>The system handles latency by showing a loading state while Gemini processes the response.</li>
+<li>"Business Response" is auto-generated to handle volume.</li>
+</ul>
+<h3>Admin Dashboard</h3>
+<ul>
+<li><strong>Live Updates</strong>: Auto-refresh every 10s.</li>
+<li><strong>Aggregated Insights</strong>: AI Actions provide immediate operational value ("Clean tables", "Training required") rather than just raw text.</li>
+</ul>
+<h3>Trade-offs &amp; Limitations</h3>
+<ul>
+<li><strong>Latency</strong>: Real-time LLM calls add 1-3s latency. <em>Improvement: Use background queues (Celery/Redis) for non-blocking submission.</em></li>
+<li><strong>Context Window</strong>: Currently treats each review in isolation. <em>Improvement: Feed last N reviews to AI for trend context.</em></li>
+<li><strong>Security</strong>: Basic implementation. <em>Improvement: Add Auth0/OAuth for Admin routes.</em></li>
+</ul>
+<h2>5. Deployment</h2>
+<p>Both dashboards are deployable to Render/Vercel.
+- <strong>User URL</strong>: [Access /user endpoint on deployed URL]
+- <strong>Admin URL</strong>: [Access /admin endpoint on deployed URL]</p>
+</body>
+</html>

@@ -1,14 +1,10 @@
-GitHub Repository: [LINK_TO_YOUR_GITHUB_REPO]
+GitHub Repository: https://github.com/Aniruddh-11-stack/fynd-ai-intern-assessment
 Report PDF Link: [LINK_TO_YOUR_PDF_OR_REPORT_MD]
-User Dashboard URL: [LINK_TO_YOUR_VERCEL/RENDER_URL]/user
-Admin Dashboard URL: [LINK_TO_YOUR_VERCEL/RENDER_URL]/admin
+User Dashboard URL: https://fynd-ai-intern-assessment.vercel.app/user
+Admin Dashboard URL: https://fynd-ai-intern-assessment.vercel.app/admin
 
 ---
-**Deployment Instructions:**
-1. Create a new Repo on GitHub.com.
-2. Run in terminal:
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-   git push -u origin main
-3. Go to Vercel.com -> New Project -> Import from GitHub.
-4. Add Environment Variable: GEMINI_API_KEY = ...
-5. Deploy.
+**Status:**
+- Task 1: Completed (Results in task1/evaluation_results.csv)
+- Task 2: Deployed & Verified on Vercel.
+
