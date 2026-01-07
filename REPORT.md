@@ -23,6 +23,14 @@ We evaluated 3 prompt designs on a subset of the Yelp dataset.
 - **Metric 2: JSON Validity**: % of responses successfully parsed as JSON.
 - **Metric 3: Reliability**: Qualitative assessment of explanation quality.
 
+### Quantitative Results (Gemini-2.0-Flash)
+
+| Prompt Version | Accuracy | Valid JSON % |
+| :--- | :--- | :--- |
+| Zero-Shot | 69.85% | 99.5% |
+| Chain-of-Thought | 65.33% | 99.5% |
+| Few-Shot-Structured | 69.04% | 98.5% |
+
 ### Observed Results (General Findings)
 - **Zero-shot**: Often accurate but prone to formatting errors (returning text instead of JSON).
 - **CoT**: Higher accuracy on ambiguous reviews but higher latency due to longer token generation.
