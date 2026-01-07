@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: fynd-ai-assessment
+    env: python
+    buildCommand: pip install -r task2/requirements.txt
+    startCommand: uvicorn task2.app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-8 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-900">Review Admin Dashboard</h1>
+            <button onclick="fetchReviews()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Refresh Data</button>
+        </header>
+
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Review</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">AI Summary</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Suggested Actions</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Response Sent</th>
+                    </tr>
+                </thead>
+                <tbody id="reviewsTable" class="bg-white divide-y divide-gray-200">
+                    <!-- Rows will be injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchReviews() {
+            try {
+                const res = await fetch('/api/reviews');
+                const reviews = await res.json();
+                const tbody = document.getElementById('reviewsTable');
+                tbody.innerHTML = '';
+
+                reviews.forEach(review => {
+                    let actions = [];
+                    try {
+                        actions = JSON.parse(review.ai_actions);
+                    } catch (e) {
+                        actions = [review.ai_actions]; // Fallback
+                    }
+                    
+                    const actionBadges = actions.map(act => 
+                        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-2 mb-1">${act}</span>`
+                    ).join('');
+
+                    const stars = '⭐'.repeat(review.rating);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-500 font-bold">${stars}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate" title="${review.review_text}">${review.review_text}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500 italic">${review.ai_summary}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">
+                            <div class="flex flex-wrap">${actionBadges}</div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title="${review.ai_response}">${review.ai_response}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Failed to fetch reviews:', err);
+            }
+        }
+
+        // Auto-load
+        fetchReviews();
+        // Auto-refresh every 10s
+        setInterval(fetchReviews, 10000);
+    </script>
+</body>
+</html>

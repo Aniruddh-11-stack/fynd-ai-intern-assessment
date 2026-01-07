@@ -1,0 +1,7 @@
+pandas
+scikit-learn
+google-generativeai
+python-dotenv
+tqdm
+ipykernel
+nbformat

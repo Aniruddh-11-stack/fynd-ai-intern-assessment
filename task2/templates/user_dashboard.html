@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yelp Review Submission</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 text-center">Submit a Review</h1>
+        
+        <form id="reviewForm" class="space-y-4">
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">Rating</label>
+                <div class="flex space-x-2">
+                    <!-- Simple Star Rating Input -->
+                    <select id="rating" class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4)</option>
+                        <option value="3">⭐⭐⭐ (3)</option>
+                        <option value="2">⭐⭐ (2)</option>
+                        <option value="1">⭐ (1)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">Your Review</label>
+                <textarea id="reviewText" rows="4" class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Tell us about your experience..." required></textarea>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
+                Submit Review
+            </button>
+        </form>
+
+        <!-- Response Area -->
+        <div id="responseArea" class="hidden mt-6 p-4 bg-green-50 rounded border border-green-200">
+            <h3 class="font-bold text-green-800 mb-2">Business Response:</h3>
+            <p id="responseText" class="text-gray-700 italic"></p>
+        </div>
+
+        <div id="loading" class="hidden mt-4 text-center text-gray-500">
+            Thinking...
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const rating = parseInt(document.getElementById('rating').value);
+            const reviewText = document.getElementById('reviewText').value;
+            const submitBtn = e.target.querySelector('button');
+            const responseArea = document.getElementById('responseArea');
+            const loading = document.getElementById('loading');
+            
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50');
+            loading.classList.remove('hidden');
+            responseArea.classList.add('hidden');
+
+            try {
+                const res = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rating, review_text: reviewText })
+                });
+                
+                if (!res.ok) throw new Error('Submission failed');
+                
+                const data = await res.json();
+                
+                document.getElementById('responseText').textContent = data.ai_response;
+                responseArea.classList.remove('hidden');
+                e.target.reset();
+            } catch (err) {
+                alert('Error submitting review: ' + err.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50');
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
