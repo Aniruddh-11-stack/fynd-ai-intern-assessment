@@ -27,9 +27,9 @@ We evaluated 3 prompt designs on a subset of the Yelp dataset.
 
 | Prompt Version | Accuracy | Valid JSON % |
 | :--- | :--- | :--- |
-| Zero-Shot | 69.85% | 99.5% |
-| Chain-of-Thought | 65.33% | 99.5% |
-| Few-Shot-Structured | 69.04% | 98.5% |
+| Zero-Shot | 67.17% | 99.0% |
+| Chain-of-Thought | 65.99% | 98.5% |
+| Few-Shot-Structured | 70.41% | 98.0% |
 
 ### Observed Results (General Findings)
 - **Zero-shot**: Often accurate but prone to formatting errors (returning text instead of JSON).
